@@ -1,0 +1,19 @@
+{% extends 'aplicacion1/base.html' %}
+
+{% block title %}Detalle del Producto{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="mb-4">Detalle del Producto</h1>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">{{ producto.nombre_producto }}</h5>
+            <p class="card-text"><strong>Grupo:</strong> {{ producto.id_grupo.nombre_grupo }}</p>
+            <p class="card-text"><strong>Familia:</strong> {{ producto.id_familia.nombre_familia }}</p>
+            <a href="{% url 'producto_update' producto.pk %}" class="btn btn-warning">Editar</a>
+            <a href="{% url 'producto_delete' producto.pk %}" class="btn btn-danger">Eliminar</a>
+            <a href="{% url 'producto_list' %}" class="btn btn-secondary">Volver a la lista</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
