@@ -1,10 +1,28 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Producto
 from .forms import ProductoForm
 
 def producto_list(request):
     productos = Producto.objects.all()
-    return render(request, 'aplicacion1/producto_list.html', {'productos': productos})
+
+
+    nombre = request.GET.get('nombre')
+    grupo = request.GET.get('grupo')
+    familia = request.GET.get('familia')
+
+    if nombre:
+        productos = productos.filter(nombre_producto__icontains=nombre)
+    if grupo:
+        productos = productos.filter(id_grupo__nombre_grupo__icontains=grupo)
+    if familia:
+        productos = productos.filter(id_familia__nombre_familia__icontains=familia)
+
+    paginator = Paginator(productos, 10)  # Mostrar 10 productos por página
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, 'aplicacion1/producto_list.html', {'page_obj': page_obj})
 
 def producto_detail(request, pk):
     producto = get_object_or_404(Producto, pk=pk)

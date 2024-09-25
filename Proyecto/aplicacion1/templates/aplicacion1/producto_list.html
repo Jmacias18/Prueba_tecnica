@@ -6,6 +6,25 @@
 <div class="container mt-5">
     <h1 class="mb-4">Lista de Productos</h1>
     <a href="{% url 'producto_create' %}" class="btn btn-success mb-3">Crear nuevo producto</a>
+    
+
+    <form method="GET" class="mb-4">
+        <div class="form-row">
+            <div class="col">
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre del producto" value="{{ request.GET.nombre }}">
+            </div>
+            <div class="col">
+                <input type="text" name="grupo" class="form-control" placeholder="Grupo" value="{{ request.GET.grupo }}">
+            </div>
+            <div class="col">
+                <input type="text" name="familia" class="form-control" placeholder="Familia" value="{{ request.GET.familia }}">
+            </div>
+            <div class="col">
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </div>
+    </form>
+
     <table class="table table-striped">
         <thead>
             <tr>
@@ -17,7 +36,7 @@
             </tr>
         </thead>
         <tbody>
-            {% for producto in productos %}
+            {% for producto in page_obj %}
             <tr>
                 <td>{{ producto.id }}</td>
                 <td>{{ producto.nombre_producto }}</td>
@@ -32,5 +51,30 @@
             {% endfor %}
         </tbody>
     </table>
+
+    <!-- Paginación -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if request.GET.nombre %}nombre={{ request.GET.nombre }}&{% endif %}{% if request.GET.grupo %}grupo={{ request.GET.grupo }}&{% endif %}{% if request.GET.familia %}familia={{ request.GET.familia }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            {% endif %}
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?{% if request.GET.nombre %}nombre={{ request.GET.nombre }}&{% endif %}{% if request.GET.grupo %}grupo={{ request.GET.grupo }}&{% endif %}{% if request.GET.familia %}familia={{ request.GET.familia }}&{% endif %}page={{ num }}">{{ num }}</a>
+            </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?{% if request.GET.nombre %}nombre={{ request.GET.nombre }}&{% endif %}{% if request.GET.grupo %}grupo={{ request.GET.grupo }}&{% endif %}{% if request.GET.familia %}familia={{ request.GET.familia }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
 </div>
 {% endblock %}
